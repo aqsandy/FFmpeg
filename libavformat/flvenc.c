@@ -539,10 +539,10 @@ static void flv_write_codec_header(AVFormatContext* s, AVCodecParameters* par, i
             avio_w8(pb, 0); // AVC sequence header
             avio_wb24(pb, 0); // composition time
             if (par->codec_id == AV_CODEC_ID_HEVC) {
-+                ff_isom_write_hvcc(pb, par->extradata, par->extradata_size, 0);
-+            } else {
-+                ff_isom_write_avcc(pb, par->extradata, par->extradata_size);
-+            }
+                ff_isom_write_hvcc(pb, par->extradata, par->extradata_size, 0);
+            } else {
+                ff_isom_write_avcc(pb, par->extradata, par->extradata_size);
+            }
         }
         data_size = avio_tell(pb) - pos;
         avio_seek(pb, -data_size - 10, SEEK_CUR);
@@ -972,9 +972,9 @@ static int flv_write_packet(AVFormatContext *s, AVPacket *pkt)
             if ((ret = ff_avc_parse_nal_units_buf(pkt->data, &data, &size)) < 0)
                 return ret;
         } else if (par->codec_id == AV_CODEC_ID_HEVC) {
-+        if (par->extradata_size > 0 && *(uint8_t*)par->extradata != 1)
-+            if ((ret = ff_hevc_annexb2mp4_buf(pkt->data, &data, &size, 0, NULL)) < 0)
-+                return ret;
+        if (par->extradata_size > 0 && *(uint8_t*)par->extradata != 1)
+            if ((ret = ff_hevc_annexb2mp4_buf(pkt->data, &data, &size, 0, NULL)) < 0)
+                return ret;
         } else if (par->codec_id == AV_CODEC_ID_AAC && pkt->size > 2 &&
                (AV_RB16(pkt->data) & 0xfff0) == 0xfff0) {
         if (!s->streams[pkt->stream_index]->nb_frames) {

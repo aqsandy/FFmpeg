@@ -323,7 +323,7 @@ static int flv_same_video_codec(AVCodecParameters *vpar, int flags)
     case FLV_CODECID_H264:
         return vpar->codec_id == AV_CODEC_ID_H264;
     case FLV_CODECID_HEVC:
-+        return vpar->codec_id == AV_CODEC_ID_HEVC;
+        return vpar->codec_id == AV_CODEC_ID_HEVC;
     default:
         return vpar->codec_tag == flv_codecid;
     }
@@ -374,10 +374,10 @@ static int flv_set_video_codec(AVFormatContext *s, AVStream *vstream,
         ret = 3;
         break;
     case FLV_CODECID_HEVC:
-+        par->codec_id = AV_CODEC_ID_HEVC;
-+        vstream->need_parsing = AVSTREAM_PARSE_NONE;
-+        ret = 3;     // not 4, reading packet type will consume one byte
-+        break;
+        par->codec_id = AV_CODEC_ID_HEVC;
+        vstream->need_parsing = AVSTREAM_PARSE_NONE;
+        ret = 3;     // not 4, reading packet type will consume one byte
+        break;
     default:
         avpriv_request_sample(s, "Video codec (%x)", flv_codecid);
         par->codec_tag = flv_codecid;
